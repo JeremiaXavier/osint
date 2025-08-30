@@ -244,9 +244,7 @@ def run_osint_app():
             "Username Check (Maigret)",
             "Username Check (Sherlock)",
             "Email Lookup (Holehe)",
-            "Domain Recon (theHarvester)",
             "Domain Whois",
-            "Image EXIF Metadata",
         ]
     )
 
@@ -258,9 +256,7 @@ def run_osint_app():
         sherlock_osint()
     elif tool == "Email Lookup (Holehe)":
         holehe_osint()
-    elif tool == "Domain Recon (theHarvester)":
-        harvester_osint()
+    
     elif tool == "Domain Whois":
         whois_lookup()
-    elif tool == "Image EXIF Metadata":
-        exif_extractor()
+   
