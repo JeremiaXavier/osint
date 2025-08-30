@@ -9,6 +9,23 @@ from io import BytesIO
 
 # --- 1. Instagram Profile OSINT --- #
 
+import os
+
+def cleanup_txt_files(given_name, root="."):
+    """
+    Deletes all .txt files in the given root folder that start with a given name.
+
+    :param given_name: the prefix of the filenames to delete (e.g. "report")
+    :param root: folder to clean (default: current folder)
+    """
+    for item in os.listdir(root):
+        path = os.path.join(root, item)
+        if os.path.isfile(path) and item.startswith(given_name) and item.endswith(".txt"):
+            try:
+                os.remove(path)
+               
+            except Exception as e:
+                print(f"Error deleting {item}: {e}")
 
 def instagram_osint():
     """Fetches and displays public Instagram profile information."""
@@ -103,6 +120,7 @@ def sherlock_osint():
                 )
                 if result.stdout:
                     st.code(result.stdout)
+                    cleanup_txt_files(uname)
                 else:
                     st.warning("No accounts found.")
             except Exception as e:
