@@ -6,3 +6,4 @@ python-whois
 sherlock-project @ git+https://github.com/sherlock-project/sherlock.git
 
 instaloader
+social-analyzer

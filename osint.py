@@ -6,7 +6,7 @@ import exifread
 import requests
 import instaloader
 from io import BytesIO
-
+import sys
 # --- 1. Instagram Profile OSINT --- #
 
 import os
@@ -29,7 +29,7 @@ def cleanup_txt_files(given_name, root="."):
 
 def instagram_osint():
     """Fetches and displays public Instagram profile information."""
-    st.header("📷 Instagram Profile OSINT")
+    st.header("📷 Instagram Profile Details")
     username = st.text_input("Enter Instagram username:")
     if st.button("Get Profile Details"):
         if username:
@@ -71,11 +71,11 @@ def instagram_osint():
 
 def maigret_osint():
     """Checks for a username's existence across multiple websites using Maigret."""
-    st.header("🌍 OSINT across websites (Maigret)")
+    st.header("🌍 Username Intelligence across websites ")
     uname = st.text_input("Enter username to check across platforms:")
-    if st.button("Run Maigret"):
+    if st.button("Run scan"):
         if uname:
-            st.info("Running Maigret... this may take a while ⏳")
+            st.info("Running scan... this may take a while ⏳")
             try:
                 # Add --no-files flag to prevent report generation
                 result = subprocess.run(
@@ -94,11 +94,11 @@ def maigret_osint():
                         )
                         st.code(result.stdout)
                 else:
-                    st.warning("No output from Maigret.")
+                    st.warning("No output.")
                 if result.stderr:
                     st.error(result.stderr)
             except Exception as e:
-                st.error(f"Error running Maigret: {e}")
+                st.error(f"Error running scan: {e}")
         else:
             st.warning("Please enter a username")
 # --- 3. Username Check (Sherlock) --- #
@@ -106,11 +106,11 @@ def maigret_osint():
 
 def sherlock_osint():
     """Searches for a username on various social networks using Sherlock."""
-    st.header("🕵️ Username OSINT with Sherlock")
+    st.header("🕵️ Username Intelligence")
     uname = st.text_input("Enter username to check across platforms:")
-    if st.button("Run Sherlock"):
+    if st.button("Run scan"):
         if uname:
-            st.info("Running Sherlock... ⏳")
+            st.info("Running scan... ⏳")
             try:
                 result = subprocess.run(
                     # Add --no-color and --print-found to prevent file generation
@@ -124,7 +124,7 @@ def sherlock_osint():
                 else:
                     st.warning("No accounts found.")
             except Exception as e:
-                st.error(f"Error running Sherlock: {e}")
+                st.error(f"Error running scan: {e}")
         else:
             st.warning("Please enter a username")
 # --- 4. Email Lookup (Holehe) --- #
@@ -132,11 +132,11 @@ def sherlock_osint():
 
 def holehe_osint():
     """Checks if an email is registered on various websites using Holehe."""
-    st.header("📧 Email OSINT with Holehe")
+    st.header("📧 Email Intelligence")
     email = st.text_input("Enter email address:")
-    if st.button("Run Holehe"):
+    if st.button("Run Scan"):
         if email:
-            st.info("Checking email with Holehe... ⏳")
+            st.info("Checking email  ... ⏳")
             try:
                 result = subprocess.run(
                     ["holehe", email], capture_output=True, text=True)
@@ -147,40 +147,42 @@ def holehe_osint():
                 if result.stderr:
                     st.error(result.stderr)
             except Exception as e:
-                st.error(f"Error running Holehe: {e}")
+                st.error(f"Error running scan: {e}")
         else:
             st.warning("Please enter an email address")
 
-# --- 5. Domain Recon (theHarvester) --- #
-
-
-def harvester_osint():
-    """Gathers information about a domain using theHarvester."""
-    st.header("🌐 Domain OSINT with theHarvester")
-    domain = st.text_input("Enter domain (e.g. example.com):")
-    if st.button("Run theHarvester"):
-        if domain:
-            st.info("Running theHarvester... ⏳")
+def social_analyzer_osint():
+    st.header("👤 Social Analyzer")
+    username = st.text_input("Enter a username to analyze:")
+    
+    if st.button("Run Social Analyzer"):
+        if username:
+            st.info("Running Social Analyzer... ⏳ This may take a moment.")
             try:
+                # The -m flag runs the package as a module
                 result = subprocess.run(
-                    ["python","-m","theHarvester", "-d", domain, "-l", "100", "-b", "all"], capture_output=True, text=True)
+                    ["python3", "-m", "social-analyzer", "--username", username, "--mode", "fast", "--websites" ,"facebook instagram twitter linkedin youtube tumblr quora snapchat telegram pinterest whatsapp reddit github gitlab medium tiktok vimeo dailymotion soundcloud spotify clubhouse discord twitch slack stackoverflow wechat kakaotalk signal messenger"],
+                    capture_output=True,
+                    text=True,
+                    check=True
+                )
+                
                 if result.stdout:
+                    st.success("Analysis complete. Results:")
                     st.code(result.stdout)
                 else:
-                    st.warning("No results.")
-                if result.stderr:
-                    st.error(result.stderr)
+                    st.warning("No profiles found for this username.")
+            except subprocess.CalledProcessError as e:
+                st.error(f"Social Analyzer exited with an error. Check the input.")
+                st.code(e.stderr)
             except Exception as e:
-                st.error(f"Error running theHarvester: {e}")
+                st.error(f"An unexpected error occurred: {e}")
         else:
-            st.warning("Please enter a domain")
-
-# --- 6. Domain Whois --- #
-
+            st.warning("Please enter a username.")
 
 def whois_lookup():
     """Performs a Whois lookup on a given domain."""
-    st.header("🌐 Domain Whois Lookup")
+    st.header("🌐 Domain  Lookup")
     domain = st.text_input("Enter domain (e.g., example.com):")
     if st.button("Run Whois"):
         if domain:
@@ -199,64 +201,41 @@ def whois_lookup():
 # --- 7. Image EXIF Metadata --- #
 
 
-def exif_extractor():
-    """Extracts EXIF metadata from an uploaded image or image URL."""
-    st.header("🖼️ Image EXIF Metadata Extractor")
-    image_file = st.file_uploader(
-        "Upload an image file", type=["jpg", "jpeg", "png"])
-    st.write("OR")
-    image_url = st.text_input("...enter an image URL:")
-    if st.button("Extract Metadata"):
-        if image_file or image_url:
-            st.info("Extracting EXIF data... ⏳")
-            try:
-                if image_file:
-                    image_data = BytesIO(image_file.read())
-                elif image_url:
-                    response = requests.get(image_url)
-                    image_data = BytesIO(response.content)
-                tags = exifread.process_file(image_data)
-                if tags:
-                    st.success("EXIF data extracted successfully ✅")
-                    formatted_tags = {str(k): str(v)
-                                      for k, v in tags.items()}
-                    st.json(formatted_tags)
-                else:
-                    st.warning("No EXIF metadata found in this image.")
-            except Exception as e:
-                st.error(f"Error extracting metadata: {e}")
-        else:
-            st.warning("Please upload an image or enter a URL.")
+
 
 # --- Main App Logic --- #
 
 
 def run_osint_app():
-    st.sidebar.title("OSINT Toolkit")
+    st.sidebar.title("Intelligence Wing of Hexabyte")
     st.sidebar.markdown(
-        "Select an OSINT tool from the list to get started. "
+        "Select a tool from the list to get started. "
     )
 
     tool = st.sidebar.radio(
         "Choose a tool:",
         [
             "Instagram Profile Info",
-            "Username Check (Maigret)",
-            "Username Check (Sherlock)",
-            "Email Lookup (Holehe)",
-            "Domain Whois",
+            "Username Check 1",
+            "Username Check 2",
+            "Email Lookup",
+            "Domain Details",
+            "Social Media"
         ]
     )
 
     if tool == "Instagram Profile Info":
         instagram_osint()
-    elif tool == "Username Check (Maigret)":
+    elif tool == "Username Check 1":
         maigret_osint()
-    elif tool == "Username Check (Sherlock)":
+    elif tool == "Username Check 2":
         sherlock_osint()
-    elif tool == "Email Lookup (Holehe)":
+    elif tool == "Email Lookup":
         holehe_osint()
     
-    elif tool == "Domain Whois":
+    elif tool == "Domain Details":
         whois_lookup()
+    elif tool == "Social Media":
+
+        social_analyzer_osint()
    

@@ -5,8 +5,6 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 from osint import run_osint_app
-
-# --- Load configuration and user credentials ---
 try:
     with open('config.yaml') as file:
         config = yaml.load(file, Loader=SafeLoader)
