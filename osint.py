@@ -79,7 +79,7 @@ def maigret_osint():
             try:
                 # Add --no-files flag to prevent report generation
                 result = subprocess.run(
-                    ["python", "-m", "maigret", uname], 
+                    ["maigret", uname], 
                     capture_output=True, 
                     text=True
                 )
