@@ -163,7 +163,7 @@ def harvester_osint():
             st.info("Running theHarvester... ⏳")
             try:
                 result = subprocess.run(
-                    ["theHarvester", "-d", domain, "-l", "100", "-b", "all"], capture_output=True, text=True)
+                    ["python","-m","theHarvester", "-d", domain, "-l", "100", "-b", "all"], capture_output=True, text=True)
                 if result.stdout:
                     st.code(result.stdout)
                 else:
