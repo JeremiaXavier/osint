@@ -1,0 +1,14 @@
+cookie:
+  expiry_days: 30
+  key: "your_random_cookie_key"
+  name: "Hexabyte"
+credentials:
+  usernames:
+    admin:
+      email: "agent27@hexabyte.com"
+      name: "Agent27"
+      password: "$2b$12$2gT2PUAVIVcD0kfSL9vVoevMQYjURDMPXZhfMmA3THg.E6MR8i9U2"
+    guest:
+      email: "guest@example.com"
+      name: "Guest User"
+      password: "$2b$12$v7tCLnaCD0GtzjriNLANS.L1hGNejhtwU3XdArvbdCQrpLSid6.mS"
