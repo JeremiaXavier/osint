@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 import json
 import whois
-import exifread
+
 import requests
 import instaloader
 from io import BytesIO
